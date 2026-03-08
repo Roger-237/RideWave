@@ -11,7 +11,17 @@
 </head>
 
 <body class="admin-body">
+    <div id="adminLoader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebarOverlay" onclick="toggleAdminSidebar()"></div>
+
     <aside class="sidebar">
+        <div class="sidebar-close" onclick="toggleAdminSidebar()">
+            <i class='bx bx-x'></i>
+        </div>
         <div class="sidebar-header">
             <a href="index.html" class="logo">Ride <span>Wave</span></a>
         </div>

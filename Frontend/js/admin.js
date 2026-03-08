@@ -2,15 +2,30 @@ const BOOKINGS_API = 'https://ride-wave-vbtv.vercel.app/api/bookings';
 const CARS_API = 'https://ride-wave-vbtv.vercel.app/api/cars';
 const API_URL = 'https://ride-wave-vbtv.vercel.app/api/auth';
 
+let allBookingsArray = []; // Global store to avoid redundant fetches
+
 function toggleAdminSidebar() {
-    document.querySelector('.sidebar').classList.toggle('active');
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('active');
+    if (overlay) overlay.classList.toggle('active');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    checkAdminAuth();
-    loadCars();
-    loadBookings();
-    loadStats();
+document.addEventListener('DOMContentLoaded', async () => {
+    showLoading();
+    try {
+        await checkAdminAuth();
+        // Load everything in parallel
+        await Promise.all([
+            loadCars(),
+            loadBookings(),
+            loadStats()
+        ]);
+    } catch (err) {
+        console.error("Initial load error:", err);
+    } finally {
+        hideLoading();
+    }
 
 
     // Tab switch logic (Sidebar)
@@ -33,6 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
             loadBookings();
             // Cacher le badge quand on consulte
             document.getElementById('bookingBadge').style.display = 'none';
+        }
+
+        // Close sidebar on mobile after selection
+        if (window.innerWidth <= 768) {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar.classList.contains('active')) {
+                toggleAdminSidebar();
+            }
         }
     };
 
@@ -343,6 +366,7 @@ async function loadBookings() {
         const res = await fetch(`${BOOKINGS_API}/admin`, { credentials: 'include' });
         const data = await res.json();
         if (data.SUCCESS) {
+            allBookingsArray = data.data; // Store globally
             renderBookingsTable(data.data);
 
             // Notification "Lumière Jaune"
@@ -393,12 +417,12 @@ function renderBookingsTable(bookings) {
             <td>
                 <div style="display: flex; gap: 10px;">
                     ${b.driverLicense ? `
-                        <a href="http://localhost:3000/${b.driverLicense}" target="_blank" class="btn-action-doc" title="Voir Permis">
+                        <a href="https://ride-wave-vbtv.vercel.app/${b.driverLicense}" target="_blank" class="btn-action-doc" title="Voir Permis">
                             <i class="bx bx-id-card"></i> Permis
                         </a>
                     ` : '<small>Pas de permis</small>'}
                     ${b.idCard ? `
-                        <a href="http://localhost:3000/${b.idCard}" target="_blank" class="btn-action-doc" title="Voir CNI">
+                        <a href="https://ride-wave-vbtv.vercel.app/${b.idCard}" target="_blank" class="btn-action-doc" title="Voir CNI">
                             <i class="bx bx-file"></i> CNI
                         </a>
                     ` : '<small>Pas de CNI</small>'}
@@ -406,7 +430,7 @@ function renderBookingsTable(bookings) {
             </td>
             <td><span class="status-badge ${b.status}">${b.status}</span></td>
             <td class="td-actions">
-                ${b.status === 'en attente' || b.status === 'confirmé' ? `
+                ${b.status !== 'terminé' ? `
                     <div class="btn-action btn-confirm" onclick="ouvrirModaleActionReservation('${b._id}', '${b.status}')" title="Gérer">
                         <i class="bx bx-cog"></i>
                     </div>
@@ -427,64 +451,61 @@ function getStatusColor(status) {
     }
 }
 
-window.ouvrirModaleActionReservation = async (id, status) => {
-    try {
-        const res = await fetch(`${BOOKINGS_API}/admin`, { credentials: 'include' });
-        const data = await res.json();
-        const booking = data.data.find(b => b._id === id);
+window.ouvrirModaleActionReservation = (id, status) => {
+    // Find booking in local array without fetching again
+    const booking = allBookingsArray.find(b => b._id === id);
 
-        if (booking) {
-            const content = document.getElementById('bookingDetailsContent');
-            content.innerHTML = `
-                <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #eee;">
-                    <p><strong>Client:</strong> ${booking.user ? booking.user.name : 'N/A'}</p>
-                    <p><strong>Véhicule:</strong> ${booking.car ? booking.car.name : 'N/A'}</p>
-                    <p><strong>Total:</strong> <span style="color: var(--main-color); font-weight: bold;">${(booking.totalPrice || 0).toLocaleString()} F CFA</span></p>
-                    <p><strong>Période:</strong> ${new Date(booking.startDate).toLocaleDateString()} au ${new Date(booking.endDate).toLocaleDateString()}</p>
-                </div>
-            `;
+    if (booking) {
+        const content = document.getElementById('bookingDetailsContent');
+        content.innerHTML = `
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #eee;">
+                <p><strong>Client:</strong> ${booking.user ? booking.user.name : 'N/A'}</p>
+                <p><strong>Véhicule:</strong> ${booking.car ? booking.car.name : 'N/A'}</p>
+                <p><strong>Total:</strong> <span style="color: var(--main-color); font-weight: bold;">${(booking.totalPrice || 0).toLocaleString()} F CFA</span></p>
+                <p><strong>Période:</strong> ${new Date(booking.startDate).toLocaleDateString()} au ${new Date(booking.endDate).toLocaleDateString()}</p>
+            </div>
+        `;
 
-            const modal = document.getElementById('modalBookingAction');
-            const cancelGroup = document.getElementById('cancelReasonGroup');
-            cancelGroup.style.display = 'none';
+        const modal = document.getElementById('modalBookingAction');
+        const cancelGroup = document.getElementById('cancelReasonGroup');
+        cancelGroup.style.display = 'none';
 
-            const btnConfirm = document.getElementById('btnConfirmBooking');
-            const btnRefuse = document.getElementById('btnRefuseBooking');
+        const btnConfirm = document.getElementById('btnConfirmBooking');
+        const btnRefuse = document.getElementById('btnRefuseBooking');
 
-            if (booking.status === 'confirmé') {
-                btnConfirm.innerText = 'Terminer la location';
-                btnConfirm.style.background = '#2196F3'; // Blue for finishing
-                btnConfirm.onclick = () => executerActionBooking(id, 'terminé');
-                btnRefuse.style.display = 'none'; // Cannot refuse already confirmed
-            } else {
-                btnConfirm.innerText = 'Confirmer';
-                btnConfirm.style.background = '#4CAF50';
-                btnConfirm.style.display = 'block';
-                btnRefuse.style.display = 'block';
-                btnConfirm.onclick = () => executerActionBooking(id, 'confirmé');
-                btnRefuse.onclick = () => {
+        if (booking.status === 'confirmé') {
+            btnConfirm.innerText = 'Terminer la location';
+            btnConfirm.style.background = '#2196F3';
+            btnConfirm.onclick = () => executerActionBooking(id, 'terminé');
+            btnRefuse.style.display = 'none';
+        } else {
+            btnConfirm.innerText = 'Confirmer';
+            btnConfirm.style.background = '#4CAF50';
+            btnConfirm.style.display = 'block';
+            btnRefuse.style.display = 'block';
+            btnConfirm.onclick = () => executerActionBooking(id, 'confirmé');
+
+            // Fix nested onclick bug
+            btnRefuse.onclick = () => {
+                if (cancelGroup.style.display === 'none') {
                     cancelGroup.style.display = 'block';
-                    btnRefuse.onclick = () => {
-                        const reason = document.getElementById('cancelReason').value;
-                        if (!reason) {
-                            afficherNotification('Veuillez donner une raison', 'error');
-                            return;
-                        }
-                        executerActionBooking(id, 'annulé', reason);
-                    };
-                };
-            }
-
-            document.getElementById('superpositionModale').classList.add('active');
-            modal.classList.add('active');
-
+                } else {
+                    const reason = document.getElementById('cancelReason').value;
+                    if (!reason) {
+                        return afficherNotification('Veuillez donner une raison', 'error');
+                    }
+                    executerActionBooking(id, 'annulé', reason);
+                }
+            };
         }
-    } catch (err) {
-        afficherNotification('Erreur chargement détails', 'error');
+
+        document.getElementById('superpositionModale').classList.add('active');
+        modal.classList.add('active');
     }
 }
 
 async function executerActionBooking(id, status, cancelReason = '') {
+    showLoading();
     try {
         const res = await fetch(`${BOOKINGS_API}/${id}/status`, {
             method: 'PUT',
@@ -496,12 +517,28 @@ async function executerActionBooking(id, status, cancelReason = '') {
         if (data.SUCCESS) {
             afficherNotification(`Réservation ${status} !`, 'success');
             fermerModales();
-            loadBookings();
-            loadStats();
-            loadCars(); // reload cars to see the status change
+            // Reload all data to keep UI in sync
+            await Promise.all([
+                loadBookings(),
+                loadStats(),
+                loadCars()
+            ]);
+        } else {
+            afficherNotification(data.message || 'Erreur mise à jour', 'error');
         }
     } catch (err) {
-        afficherNotification('Erreur mise à jour', 'error');
+        afficherNotification('Erreur réseau lors de la mise à jour', 'error');
+    } finally {
+        hideLoading();
     }
 }
 
+function showLoading() {
+    const loader = document.getElementById('adminLoader');
+    if (loader) loader.style.display = 'flex';
+}
+
+function hideLoading() {
+    const loader = document.getElementById('adminLoader');
+    if (loader) loader.style.display = 'none';
+}
