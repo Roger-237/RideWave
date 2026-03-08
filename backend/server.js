@@ -39,8 +39,16 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'Frontend', 'index.html'));
 });
 
-connectDB().then(() => {
-    app.listen(PORT, () => {
-        console.log(`RideWave server running at http://localhost:${PORT}`);
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+    connectDB().then(() => {
+        app.listen(PORT, () => {
+            console.log(`RideWave server running at http://localhost:${PORT}`);
+        });
     });
-});
+} else {
+    // On Vercel, we connect to DB but export the app
+    connectDB();
+}
+
+module.exports = app;
