@@ -16,7 +16,16 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5500',
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+        if (origin.endsWith('.vercel.app') || origin.startsWith('http://localhost:')) {
+            callback(null, true);
+        } else if (process.env.CLIENT_URL && origin === process.env.CLIENT_URL) {
+            callback(null, true);
+        } else {
+            callback(new Error('CORS policy violation'));
+        }
+    },
     credentials: true
 }));
 
