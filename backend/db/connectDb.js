@@ -7,7 +7,8 @@ const connectDB = async () => {
         console.log('MONGODB CONNECTED SUCCESSFULLY!');
     } catch (error) {
         console.error('Error connecting to MONGODB', error);
-        process.exit(1);
+        // Do not use process.exit(1) on Vercel
+        throw error;
     }
 };
 

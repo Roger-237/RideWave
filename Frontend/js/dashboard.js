@@ -1,5 +1,5 @@
-const API_URL = 'http://localhost:3000/api/auth';
-const BOOKINGS_API = 'http://localhost:3000/api/bookings';
+const API_URL = 'https://ride-wave-vbtv.vercel.app/api/auth';
+const BOOKINGS_API = 'https://ride-wave-vbtv.vercel.app/api/bookings';
 
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();

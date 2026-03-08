@@ -1,6 +1,6 @@
-const BOOKINGS_API = 'http://localhost:3000/api/bookings';
-const CARS_API = 'http://localhost:3000/api/cars';
-const API_URL = 'http://localhost:3000/api/auth';
+const BOOKINGS_API = 'https://ride-wave-vbtv.vercel.app/api/bookings';
+const CARS_API = 'https://ride-wave-vbtv.vercel.app/api/cars';
+const API_URL = 'https://ride-wave-vbtv.vercel.app/api/auth';
 
 document.addEventListener('DOMContentLoaded', () => {
     checkAdminAuth();

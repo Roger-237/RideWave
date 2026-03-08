@@ -240,7 +240,7 @@ async function loadCarsHome() {
     if (!louerContainer) return;
 
     try {
-        const res = await fetch('http://localhost:3000/api/cars');
+        const res = await fetch('https://ride-wave-vbtv.vercel.app/api/cars');
         const data = await res.json();
         if (data.SUCCESS) {
             renderCars(data.data);
@@ -295,7 +295,7 @@ const carteMotDePasseOublie = document.getElementById('carteMotDePasseOublie');
 const conteneurNotifications = document.getElementById('conteneurNotifications');
 
 // API Base URL - Force absolute URL for backend on port 3000
-const API_URL = 'http://localhost:3000/api/auth';
+const API_URL = 'https://ride-wave-vbtv.vercel.app/api/auth';
 
 // ===== TOAST NOTIFICATIONS =====
 function afficherNotification(message, type = 'success') {
@@ -559,7 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('idCard', idCard);
 
             try {
-                const res = await fetch('http://localhost:3000/api/bookings', {
+                const res = await fetch('https://ride-wave-vbtv.vercel.app/api/bookings', {
                     method: 'POST',
                     credentials: 'include',
                     body: formData

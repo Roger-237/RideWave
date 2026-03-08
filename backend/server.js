@@ -34,21 +34,25 @@ app.use('/api/cars', carRoutes);
 // Booking Routes
 app.use('/api/bookings', bookingRoutes);
 
-// Serve index.html for the root route
+// Basic health check or API identification for the root route
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'Frontend', 'index.html'));
+    res.json({ message: "RideWave API is running", status: "online" });
 });
 
-// For local development
-if (process.env.NODE_ENV !== 'production') {
-    connectDB().then(() => {
-        app.listen(PORT, () => {
-            console.log(`RideWave server running at http://localhost:${PORT}`);
-        });
-    });
-} else {
-    // On Vercel, we connect to DB but export the app
-    connectDB();
-}
+// Database connection & Server start
+const startServer = async () => {
+    try {
+        await connectDB();
+        if (process.env.NODE_ENV !== 'production') {
+            app.listen(PORT, () => {
+                console.log(`RideWave server running at http://localhost:${PORT}`);
+            });
+        }
+    } catch (error) {
+        console.error('Sever startup error:', error);
+    }
+};
+
+startServer();
 
 module.exports = app;

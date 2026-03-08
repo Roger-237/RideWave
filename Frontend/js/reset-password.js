@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/api/auth';
+const API_URL = 'https://ride-wave-vbtv.vercel.app/api/auth';
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('formulaireResetPassword');
