@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideWave</title>
+
+    <!-- lien vers css-->
+    <link rel="stylesheet" href="./css/style.css">
+
+    <!--Box icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!--Header -->
+    <header class="header">
+
+        <!--bare de navigation -->
+
+        <div class="nav">
+
+            <!-- menu Icon -->
+            <div class="menu-icon">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+
+            <!--logo-->
+            <a href="#" class="logo">Ride <span>Wave</span></a>
+
+            <!--liens -->
+            <div class="nav-liens">
+                <a href="#acceuil" class="nav-lien">Accueil</a>
+                <a href="#louer" class="nav-lien">Location</a>
+                <a href="#equipe" class="nav-lien">Équipe</a>
+                <a href="#faq" class="nav-lien">FAQ</a>
+                <a href="#blog" class="nav-lien">Blog</a>
+                <a href="#contact" class="nav-lien">Contact</a>
+            </div>
+
+
+            <!---nav-droit -->
+            <div class="nav-droit">
+                <i class="bx bx-search search-icon"></i>
+
+                <!---input de recherche -->
+                <div class="search-box">
+                    <input type="Search" placeholder="recherche ici..." name="search" id="">
+                </div>
+
+                <!--login et inscription-->
+                <div class="login-btn" onclick="ouvrirConnexion()">
+                    <span>Connexion</span>
+
+                </div>
+                <div class="sign-up-btn" onclick="ouvrirInscription()"><span>Inscription</span></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Superposition sombre pour les popups -->
+    <div class="superposition-modale" id="superpositionModale" onclick="fermerModales()"></div>
+
+    <!-- Popup Connexion -->
+    <div class="carte-modale" id="carteConnexion">
+        <button class="btn-fermer-modale" onclick="fermerModales()">
+            <i class="bx bx-x"></i>
+        </button>
+        <div class="entete-modale">
+            <div class="logo-modale">Ride <span>Wave</span></div>
+            <h2>Bon retour parmi nous !</h2>
+            <p>Connectez-vous pour accéder à votre compte</p>
+        </div>
+        <form class="formulaire-modale" id="formulaireConnexion">
+            <div class="groupe-champ">
+                <i class="bx bx-envelope"></i>
+                <input type="email" id="emailConnexion" placeholder="Adresse e-mail" required>
+            </div>
+            <div class="groupe-champ">
+                <i class="bx bx-lock-alt"></i>
+                <input type="password" id="motDePasseConnexion" placeholder="Mot de passe" required>
+                <i class="bx bx-hide basculer-mdp" onclick="basculerMotDePasse('motDePasseConnexion', this)"></i>
+            </div>
+            <div class="options-formulaire">
+                <label class="souvenir">
+                    <input type="checkbox">
+                    <span>Se souvenir de moi</span>
+                </label>
+                <a href="#" class="lien-mdp-oublie" onclick="ouvrirMotDePasseOublie(event)">Mot de passe oublié ?</a>
+            </div>
+            <button type="submit" class="btn-soumettre-modale">
+                <span>Se connecter</span>
+                <i class="bx bx-right-arrow-alt"></i>
+            </button>
+        </form>
+        <div class="separateur-modale">
+            <span>ou continuer avec</span>
+        </div>
+        <div class="connexion-sociale">
+            <button class="btn-social btn-google">
+                <i class="bx bxl-google"></i>
+                <span>Google</span>
+            </button>
+            <button class="btn-social btn-facebook">
+                <i class="bx bxl-facebook"></i>
+                <span>Facebook</span>
+            </button>
+        </div>
+        <div class="pied-modale">
+            <p>Pas encore de compte ? <a href="#" onclick="basculerVersInscription(event)">Créer un compte</a></p>
+        </div>
+    </div>
+
+    <!-- Popup Mot de passe oublié -->
+    <div class="carte-modale" id="carteMotDePasseOublie">
+        <button class="btn-fermer-modale" onclick="fermerModales()">
+            <i class="bx bx-x"></i>
+        </button>
+        <div class="entete-modale">
+            <div class="logo-modale">Ride <span>Wave</span></div>
+            <h2>Mot de passe oublié ?</h2>
+            <p>Pas de soucis ! Entrez votre e-mail pour recevoir un lien de réinitialisation.</p>
+        </div>
+        <form class="formulaire-modale" id="formulaireMotDePasseOublie">
+            <div class="groupe-champ">
+                <i class="bx bx-envelope"></i>
+                <input type="email" id="emailMotDePasseOublie" placeholder="Adresse e-mail" required>
+            </div>
+            <button type="submit" class="btn-soumettre-modale">
+                <span>Envoyer le lien</span>
+                <i class="bx bx-paper-plane"></i>
+            </button>
+        </form>
+        <div class="pied-modale">
+            <p><a href="#" onclick="basculerVersConnexion(event)">Retour à la connexion</a></p>
+        </div>
+    </div>
+
+    <!-- Popup Inscription -->
+    <div class="carte-modale" id="carteInscription">
+        <button class="btn-fermer-modale" onclick="fermerModales()">
+            <i class="bx bx-x"></i>
+        </button>
+        <div class="entete-modale">
+            <div class="logo-modale">Ride <span>Wave</span></div>
+            <h2>Rejoignez-nous !</h2>
+            <p>Créez votre compte en quelques secondes</p>
+        </div>
+        <form class="formulaire-modale" id="formulaireInscription">
+            <div class="ligne-champs">
+                <div class="groupe-champ">
+                    <i class="bx bx-user"></i>
+                    <input type="text" id="prenomInscription" placeholder="Prénom" required>
+                </div>
+                <div class="groupe-champ">
+                    <i class="bx bx-user"></i>
+                    <input type="text" id="nomInscription" placeholder="Nom" required>
+                </div>
+            </div>
+            <div class="groupe-champ">
+                <i class="bx bx-envelope"></i>
+                <input type="email" id="emailInscription" placeholder="Adresse e-mail" required>
+            </div>
+            <div class="groupe-champ">
+                <i class="bx bx-phone"></i>
+                <input type="tel" id="telephoneInscription" placeholder="Numéro de téléphone" required>
+            </div>
+            <div class="groupe-champ">
+                <i class="bx bx-lock-alt"></i>
+                <input type="password" id="motDePasseInscription" placeholder="Mot de passe" required>
+                <i class="bx bx-hide basculer-mdp" onclick="basculerMotDePasse('motDePasseInscription', this)"></i>
+            </div>
+            <div class="groupe-champ">
+                <i class="bx bx-lock-alt"></i>
+                <input type="password" id="confirmerMotDePasse" placeholder="Confirmer le mot de passe" required>
+                <i class="bx bx-hide basculer-mdp" onclick="basculerMotDePasse('confirmerMotDePasse', this)"></i>
+            </div>
+            <label class="accepter-conditions">
+                <input type="checkbox" required>
+                <span>J'accepte les <a href="#">conditions d'utilisation</a> et la <a href="#">politique de
+                        confidentialité</a></span>
+            </label>
+            <button type="submit" class="btn-soumettre-modale">
+                <span>Créer mon compte</span>
+                <i class="bx bx-right-arrow-alt"></i>
+            </button>
+        </form>
+        <div class="separateur-modale">
+            <span>ou continuer avec</span>
+        </div>
+        <div class="connexion-sociale">
+            <button class="btn-social btn-google">
+                <i class="bx bxl-google"></i>
+                <span>Google</span>
+            </button>
+            <button class="btn-social btn-facebook">
+                <i class="bx bxl-facebook"></i>
+                <span>Facebook</span>
+            </button>
+        </div>
+        <div class="pied-modale">
+            <p>Déjà un compte ? <a href="#" onclick="basculerVersConnexion(event)">Se connecter</a></p>
+        </div>
+    </div>
+
+    <!-- Popup Vérification E-mail -->
+    <div class="carte-modale" id="carteVerification">
+        <button class="btn-fermer-modale" onclick="fermerModales()">
+            <i class="bx bx-x"></i>
+        </button>
+        <div class="entete-modale">
+            <div class="logo-modale">Ride <span>Wave</span></div>
+            <h2>Vérifiez votre e-mail</h2>
+            <p>Entrez le code de 6 chiffres envoyé à votre adresse e-mail</p>
+        </div>
+        <form class="formulaire-modale" id="formulaireVerification">
+            <div class="groupe-champ">
+                <i class="bx bx-shield-quarter"></i>
+                <input type="text" id="codeVerification" placeholder="Code de vérification" maxlength="6" required
+                    style="font-size: 24px; text-align: center; letter-spacing: 12px;">
+            </div>
+            <button type="submit" class="btn-soumettre-modale">
+                <span>Vérifier</span>
+                <i class="bx bx-check-shield"></i>
+            </button>
+        </form>
+        <div class="pied-modale">
+            <p>Vous n'avez pas reçu de code ? <a href="#" onclick="event.preventDefault()">Renvoyer le code</a></p>
+        </div>
+    </div>
+
+    <!-- Conteneur de Notifications -->
+    <div id="conteneurNotifications"
+        style="position: fixed; top: 20px; right: 20px; z-index: 10000; pointer-events: none;"></div>
+
+
+    <!--Acceuil-->
+    <section class="acceuil" id="acceuil">
+        <!--formulaire d'acceuil-->
+        <div class="acceuil-container container">
+
+            <form action="" class="formulaire-acceuil">
+                <h2>Découvrez votre véhicule idéal <span>pour une location exceptionnelle.</span></h2>
+                <select name="" id="vehicule">
+                    <option value="">Sélectionnez le type de véhicule</option>
+                    <option value="crs">Sedan</option>
+                    <option value="crs">SUV</option>
+                    <option value="crs">Sports</option>
+                </select>
+                <input type="date" name="" id="" placeholder="Date de retrait">
+                <input type="date" name="" id="" placeholder="Date de retour">
+                <input type="text" name="" id="" placeholder="Lieu de retrait">
+                <input type="submit" value="Rechercher" class="home-form-btn">
+            </form>
+
+            <!--Image d'acceuil-->
+            <img src="images/home-img.png" alt="" class="image-acceuil">
+        </div>
+    </section>
+
+    <!--Louer-->
+    <section class="louer" id="louer">
+        <!--heading-->
+        <div class="heading">
+            <span>Les Vehicules a Louer </span>
+            <h2>Meilleurs vehicules <br>Comfort, affordable et convenient</h2>
+        </div>
+        <!--contenu de louer 1-->
+        <div class="louer-container container">
+            <!-- Les véhicules seront chargés dynamiquement depuis la base de données -->
+            <p style="grid-column: 1/-1; text-align: center; color: var(--container-color);">Chargement des véhicules...
+            </p>
+        </div>
+
+    </section>
+
+
+    <!----selecrion Equipe-->
+
+    <section class="equipe" id="equipe">
+        <!----En TETE-->
+        <div class="heading">
+            <span>Nos Experts</span>
+            <h2>Rencontrez notre equipe de professionnels</h2>
+        </div>
+
+        <!----contenu de l'equipe-->
+        <div class="equipe-container container">
+            <div class="equipe-box">
+                <img src="images/team-1.jpg" alt="" class="equipe-img">
+                <div class="donnee-equipe">
+                    <h3>ISRA CHAMPION</h3>
+                    <span>CEO & Foundateur</span>
+                    <div class="social-media">
+                        <a href="#"> <i class="bx bxl-facebook"></i></a>
+                        <a href="#"> <i class="bx bxl-twitter"></i></a>
+                        <a href="#"> <i class="bx bxl-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="equipe-box">
+                <img src="images/team-2.jpg" alt="" class="equipe-img">
+                <div class="donnee-equipe">
+                    <h3>Andron Black</h3>
+                    <span>Developpeur</span>
+                    <div class="social-media">
+                        <a href="#"> <i class="bx bxl-facebook"></i></a>
+                        <a href="#"> <i class="bx bxl-twitter"></i></a>
+                        <a href="#"> <i class="bx bxl-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="equipe-box">
+                <img src="images/team-3.jpg" alt="" class="equipe-img">
+                <div class="donnee-equipe">
+                    <h3>MOHAMED</h3>
+                    <span>Manager De Location</span>
+                    <div class="social-media">
+                        <a href="#"> <i class="bx bxl-facebook"></i></a>
+                        <a href="#"> <i class="bx bxl-twitter"></i></a>
+                        <a href="#"> <i class="bx bxl-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="equipe-box">
+                <img src="images/team-4.jpg" alt="" class="equipe-img">
+                <div class="donnee-equipe">
+                    <h3>Koumba</h3>
+                    <span>Service Client</span>
+                    <div class="social-media">
+                        <a href="#"> <i class="bx bxl-facebook"></i></a>
+                        <a href="#"> <i class="bx bxl-twitter"></i></a>
+                        <a href="#"> <i class="bx bxl-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+
+        <!---heading-->
+        <div class="heading">
+            <span>Foire aux questions</span>
+            <h2>Questions fréquemment posées</h2>
+        </div>
+
+        <!---faq container-->
+
+
+        <div class="accordion-container container">
+
+            <!-- FAQ Item 1: Process -->
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h2 class="accordion-title">Comment fonctionne le processus de réservation ?</h2>
+                    <i class="bx bx-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p class="accordion-answer">
+                        C'est simple ! 1. Choisissez votre véhicule. 2. Remplissez le formulaire avec vos dates et
+                        documents (Permis & CNI).
+                        3. Votre demande passe en statut "En attente". 4. Une fois que notre équipe valide vos
+                        informations,
+                        votre réservation est "Confirmée" et le véhicule vous est réservé.
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ Item 2: Documents -->
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h2 class="accordion-title">Quels sont les documents requis pour louer ?</h2>
+                    <i class="bx bx-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p class="accordion-answer">
+                        Pour toute location, vous devez fournir une photo ou un scan lisible de votre permis de conduire
+                        en cours de validité et de votre carte d'identité (ou passeport). Ces documents sont nécessaires
+                        pour la validation de votre dossier par nos administrateurs.
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ Item 3: Confirmation -->
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h2 class="accordion-title">Comment savoir si ma réservation est validée ?</h2>
+                    <i class="bx bx-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p class="accordion-answer">
+                        Vous pouvez suivre l'état de vos réservations en temps réel dans votre "Dashboard".
+                        Le statut passera de "En attente" à "Confirmé" dès que l'administrateur aura approuvé votre
+                        demande.
+                        Si la demande est refusée pour un motif précis, celui-ci sera affiché dans votre historique.
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ Item 4: Completion -->
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h2 class="accordion-title">Que se passe-t-il à la fin de ma location ?</h2>
+                    <i class="bx bx-plus accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p class="accordion-answer">
+                        Une fois le véhicule restitué, l'administrateur marque la réservation comme "Terminée".
+                        Le véhicule redevient alors disponible pour d'autres clients. Vous pouvez ensuite conserver
+                        cette réservation dans votre historique ou la supprimer définitivement depuis votre tableau de
+                        bord.
+                    </p>
+                </div>
+            </div>
+
+
+
+
+
+
+
+        </div>
+
+
+    </section>
+
+    <!----blog--->
+
+
+    <section class="blog section" id="blog">
+        <h2 class="heading">Nos Articles</h2>
+        <div class="blog-container">
+            <!-- Blog item 1 -->
+            <div class="blog-item">
+                <img src="./images/blog-1.jpg" alt="Luxe et Élégance" class="blog-img">
+                <div class="blog-content">
+                    <h3 class="blog-title">L'élégance en mouvement : Le luxe à chaque kilomètre</h3>
+                    <p class="blog-description">Découvrez notre sélection exclusive de véhicules de prestige pour vos
+                        événements marquants. Un confort inégalé et une présence affirmée sur la route.</p>
+                </div>
+            </div>
+            <!-- Blog item 2 -->
+            <div class="blog-item">
+                <img src="./images/blog-2.jpg" alt="Aventure SUV" class="blog-img">
+                <div class="blog-content">
+                    <h3 class="blog-title">Prêt pour l'aventure : Dominez la route avec nos SUV</h3>
+                    <p class="blog-description">Que ce soit pour une escapade en montagne ou un long trajet, nos SUV
+                        robustes vous offrent l'espace et la puissance nécessaires pour explorer en toute liberté.</p>
+                </div>
+            </div>
+            <!-- Blog item 3 -->
+            <div class="blog-item">
+                <img src="./images/blog-3.jpg" alt="Sécurité Totale" class="blog-img">
+                <div class="blog-content">
+                    <h3 class="blog-title">Sécurité et Sérénité : Votre confiance, notre priorité</h3>
+                    <p class="blog-description">Chaque location chez RideWave est synonyme de tranquillité. Nos experts
+                        s'assurent que chaque véhicule est dans un état irréprochable pour votre sécurité.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>À propos</h3>
+                <p>RideWave est votre partenaire de confiance pour la location de véhicules. Nous offrons des services
+                    de qualité avec des tarifs compétitifs.</p>
+                <div class="social-links">
+                    <a href="#"><i class="bx bxl-facebook"></i></a>
+                    <a href="#"><i class="bx bxl-twitter"></i></a>
+                    <a href="#"><i class="bx bxl-instagram"></i></a>
+                    <a href="#"><i class="bx bxl-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Liens rapides</h3>
+                <ul>
+                    <li><a href="#home">Accueil</a></li>
+                    <li><a href="#about">À propos</a></li>
+                    <li><a href="#ride">Services</a></li>
+                    <li><a href="#team">Équipe</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Légal</h3>
+                <ul>
+                    <li><a href="#">Politique de confidentialité</a></li>
+                    <li><a href="#">Politique de remboursement</a></li>
+                    <li><a href="#">Politique de cookies</a></li>
+                    <li><a href="#">Conditions d'utilisation</a></li>
+                    <li><a href="#">Mentions légales</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p><i class="bx bx-map"></i> Louis, Libreville, Gabon</p>
+                <p><i class="bx bx-phone"></i> +241 062896159</p>
+                <p><i class="bx bx-envelope"></i>pendingpending373@gmail.com</p>
+                <p><i class="bx bx-time"></i> Lun-Ven: 8h-18h, Sam: 9h-13h</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 RideWave. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Popup Réservation -->
+    <div class="carte-modale" id="carteReservation">
+        <button class="btn-fermer-modale" onclick="fermerModales()">
+            <i class="bx bx-x"></i>
+        </button>
+        <div class="entete-modale">
+            <h2>Louer ce véhicule</h2>
+            <p id="nomVehiculeReservation">Modèle du véhicule</p>
+        </div>
+        <form class="formulaire-modale" id="formulaireReservation">
+            <input type="hidden" id="idVehiculeReservation">
+            <input type="hidden" id="prixParJourReservation">
+
+            <div class="groupe-champ">
+                <i class="bx bx-map"></i>
+                <input type="text" id="lieuRamassage" placeholder="Lieu de ramassage" required>
+            </div>
+
+            <div class="ligne-champs">
+                <div class="groupe-champ">
+                    <label
+                        style="font-size: 0.75rem; color: var(--container-color); margin-bottom: 5px; display: block;">Date
+                        de retrait</label>
+                    <input type="date" id="dateDebutReservation" required>
+                </div>
+                <div class="groupe-champ">
+                    <label
+                        style="font-size: 0.75rem; color: var(--container-color); margin-bottom: 5px; display: block;">Date
+                        de retour</label>
+                    <input type="date" id="dateFinReservation" required>
+                </div>
+            </div>
+
+            <div class="groupe-champ">
+                <i class="bx bx-phone"></i>
+                <input type="tel" id="telephoneReservation" placeholder="Votre numéro de téléphone" required>
+            </div>
+
+            <div class="groupe-champ"
+                style="display: flex; flex-direction: column; align-items: flex-start; padding: 10px; gap: 10px;">
+                <label style="font-size: 0.8rem; color: var(--container-color);">Permis de conduire (Photo/Scan)</label>
+                <input type="file" id="permisConduire" accept="image/*" required style="font-size: 0.8rem;">
+
+                <label style="font-size: 0.8rem; color: var(--container-color);">Carte d'Identité (Photo/Scan)</label>
+                <input type="file" id="carteIdentite" accept="image/*" required style="font-size: 0.8rem;">
+            </div>
+
+            <div id="apercuPrixTotal"
+                style="margin: 15px 0; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px; text-align: center;">
+                <span style="color: var(--container-color); font-size: 0.9rem;">Total estimé :</span>
+                <h3 id="montantTotalAffiche" style="color: var(--main-color); margin-top: 5px;">0 F CFA</h3>
+            </div>
+
+            <button type="submit" class="btn-soumettre-modale">
+                <span>Confirmer la réservation</span>
+                <i class="bx bx-check-circle"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- Popup Mes Réservations -->
+    <div class="carte-modale" id="carteMesReservations" style="max-width: 800px; width: 95%;">
+        <button class="btn-fermer-modale" onclick="fermerModales()">
+            <i class="bx bx-x"></i>
+        </button>
+        <div class="entete-modale">
+            <h2>Mes Réservations</h2>
+            <p>Historique et statut de vos locations</p>
+        </div>
+        <div id="listeReservations" style="max-height: 400px; overflow-y: auto; padding: 10px;">
+            <!-- Les réservations seront injectées ici -->
+        </div>
+    </div>
+
+    <!-----liens vers js-->
+    <script src="./js/main.js"></script>
+
+</body>
+
+</html>

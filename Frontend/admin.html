@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideWave Admin - Gestion de Flotte</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/admin.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+
+<body class="admin-body">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo">Ride <span>Wave</span></a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="sidebar-item active" onclick="switchTab('fleet')" id="tabFleet">
+                <i class="bx bx-car"></i> <span>Flotte</span>
+            </div>
+            <div class="sidebar-item" onclick="switchTab('bookings')" id="tabBookings">
+                <i class="bx bx-calendar-check"></i>
+                <span>Réservations</span>
+                <span id="bookingBadge" class="new-booking-light"></span>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="admin-user-info">
+                <i class="bx bx-user-circle"></i>
+                <span id="adminName">Admin</span>
+            </div>
+            <a href="index.html" class="sidebar-link"><i class="bx bx-home-alt"></i> Accueil</a>
+            <div onclick="logout()" class="sidebar-link logout"><i class="bx bx-log-out"></i> Déconnexion</div>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+
+        <div id="sectionFleet">
+            <div class="admin-header">
+                <div>
+                    <h1>Tableau de Bord</h1>
+                    <p>Gérez votre flotte et suivez vos performances</p>
+                </div>
+                <button class="btn-ajouter" onclick="ouvrirModaleAjout()">
+                    <i class="bx bx-plus"></i>
+                    <span>Ajouter un Véhicule</span>
+                </button>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e3f2fd; color: #1976d2;"><i class="bx bx-car"></i></div>
+                    <div class="stat-info">
+                        <h3 id="statTotalCars">0</h3>
+                        <p>Total Véhicules</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #fff3e0; color: #f57c00;"><i class="bx bx-time-five"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="statPendingBookings">0</h3>
+                        <p>En Attente</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #f1f8e9; color: #388e3c;"><i
+                            class="bx bx-check-double"></i></div>
+                    <div class="stat-info">
+                        <h3 id="statInService">0</h3>
+                        <p>En Service</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #fce4ec; color: #c2185b;"><i class="bx bx-money"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="statTotalRevenue">0 CFA</h3>
+                        <p>Revenu Total</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="cars-table-container">
+                <table class="cars-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Nom</th>
+                            <th>Type</th>
+                            <th>Transmission</th>
+                            <th>Prix (CFA)</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="carsTableBody">
+                        <!-- Les voitures seront injectées ici -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="sectionBookings" style="display: none;">
+            <div class="admin-header">
+                <div>
+                    <h1>Gestion des Réservations</h1>
+                    <p>Confirmez ou annulez les demandes des clients</p>
+                </div>
+            </div>
+
+            <div class="cars-table-container">
+                <table class="cars-table">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Véhicule</th>
+                            <th>Période / Lieu</th>
+                            <th>Documents</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingsTableBody">
+                        <!-- Les réservations seront injectées ici -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modale Ajout/Edition -->
+    <div class="superposition-modale" id="superpositionModale" onclick="fermerModales()"></div>
+    <div class="carte-modale" id="modalCar">
+        <button class="btn-fermer-modale" onclick="fermerModales()">
+            <i class="bx bx-x"></i>
+        </button>
+        <div class="entete-modale">
+            <h2 id="modalTitle">Ajouter un Véhicule</h2>
+        </div>
+        <form class="formulaire-modale" id="formCar">
+            <input type="hidden" id="carId">
+            <div class="groupe-champ">
+                <i class="bx bx-car"></i>
+                <input type="text" id="carName" placeholder="Nom du modèle (ex: Rolls-Royce)" required>
+            </div>
+            <div class="groupe-champ">
+                <i class="bx bx-category"></i>
+                <select id="carType" required>
+                    <option value="Sedan">Sedan</option>
+                    <option value="SUV">SUV</option>
+                    <option value="Sports">Sports</option>
+                </select>
+            </div>
+            <div class="groupe-champ">
+                <i class="bx bx-cog"></i>
+                <input type="text" id="carTransmission" placeholder="Transmission (ex: Automatique)" required>
+            </div>
+            <div class="groupe-champ">
+                <i class="bx bx-money"></i>
+                <input type="number" id="carPrice" placeholder="Prix par jour" required>
+            </div>
+            <div class="groupe-champ"
+                style="display: flex; flex-direction: column; align-items: flex-start; padding: 10px;">
+                <label style="font-size: 0.8rem; color: var(--container-color); margin-bottom: 5px;">Image du
+                    véhicule</label>
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <i class="bx bx-image-add"></i>
+                    <input type="file" id="carImageFile" accept="image/*"
+                        style="background: transparent; border: none; padding: 0;">
+                </div>
+                <input type="hidden" id="carImage">
+                <div id="imagePreview"
+                    style="margin-top: 10px; width: 100%; height: 100px; border: 1px dashed var(--bordure-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                    <span style="color: var(--container-color); font-size: 0.8rem;">Aucun fichier</span>
+                </div>
+            </div>
+            <button type="submit" class="btn-soumettre-modale">
+                <span id="btnSubmitText">Enregistrer</span>
+                <i class="bx bx-save"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- Modale Action Réservation (Confirmer/Refuser) -->
+    <div class="carte-modale" id="modalBookingAction">
+        <button class="btn-fermer-modale" onclick="fermerModales()">
+            <i class="bx bx-x"></i>
+        </button>
+        <div class="entete-modale">
+            <h2 id="bookingActionTitle">Détails de la Réservation</h2>
+            <p>Veuillez confirmer ou refuser cette demande</p>
+        </div>
+        <div id="bookingDetailsContent" style="margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.6;">
+            <!-- Détails injectés ici -->
+        </div>
+        <div class="groupe-champ" id="cancelReasonGroup" style="display: none; margin-bottom: 1rem;">
+            <i class="bx bx-comment-error"></i>
+            <textarea id="cancelReason" placeholder="Raison de l'annulation..."
+                style="width: 100%; border: none; outline: none; background: transparent; padding: 10px 0; font-family: inherit; resize: vertical; min-height: 60px;"></textarea>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button id="btnConfirmBooking" class="btn-soumettre-modale" style="flex: 1; background: #4CAF50;">
+                Confirmer
+            </button>
+            <button id="btnRefuseBooking" class="btn-soumettre-modale" style="flex: 1; background: var(--main-color);">
+                Refuser
+            </button>
+        </div>
+    </div>
+
+
+    <div id="conteneurNotifications"
+        style="position: fixed; top: 20px; right: 20px; z-index: 10000; pointer-events: none;"></div>
+
+    <script src="./js/admin.js"></script>
+</body>
+
+</html>

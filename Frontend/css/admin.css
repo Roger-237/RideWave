@@ -1,0 +1,385 @@
+.admin-body {
+    background: #f8f9fa;
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    background: #1a237e;
+    /* Deep Blue */
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding: 30px 0;
+    z-index: 1000;
+    transition: 0.3s;
+    color: white;
+}
+
+.sidebar-header {
+    padding: 0 30px;
+    margin-bottom: 50px;
+}
+
+.sidebar-header .logo {
+    color: white;
+}
+
+.sidebar-header .logo span {
+    color: #4fc3f7;
+    /* Light Blue accent */
+}
+
+.sidebar-nav {
+    flex: 1;
+}
+
+.sidebar-item {
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 500;
+    position: relative;
+}
+
+.sidebar-item i {
+    font-size: 20px;
+}
+
+.sidebar-item:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-item.active {
+    color: white;
+    background: rgba(255, 255, 255, 0.2);
+    border-right: 4px solid #4fc3f7;
+}
+
+.sidebar-footer {
+    padding: 20px 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.admin-user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: white;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.2s;
+    text-decoration: none;
+}
+
+.sidebar-link:hover {
+    color: white;
+}
+
+.sidebar-link.logout {
+    color: #ff8a80;
+    /* Soft red for logout on blue */
+}
+
+.new-booking-light {
+    width: 10px;
+    height: 10px;
+    background: #ffc107;
+    border-radius: 50%;
+    margin-left: auto;
+    box-shadow: 0 0 10px #ffc107;
+    /* Hidden by default */
+}
+
+.status-badge.terminé {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.admin-main {
+
+    flex: 1;
+    margin-left: 260px;
+    padding: 40px;
+    width: calc(100% - 260px);
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.admin-header h1 {
+    font-size: 2rem;
+    color: var(--text-color);
+}
+
+.admin-header p {
+    color: var(--container-color);
+}
+
+.btn-ajouter {
+    background: var(--main-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-ajouter:hover {
+    background: var(--hover-color);
+    transform: translateY(-2px);
+}
+
+.cars-table-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border: 1px solid var(--bordure-color);
+}
+
+.cars-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.cars-table th {
+    background: #fef0f0;
+    padding: 15px 20px;
+    font-weight: 600;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--bordure-color);
+}
+
+.cars-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--bordure-color);
+    vertical-align: middle;
+}
+
+.car-img-td {
+    width: 80px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.td-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-action {
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid var(--bordure-color);
+    transition: 0.2s;
+}
+
+.btn-edit {
+    color: #4a90e2;
+}
+
+.btn-edit:hover {
+    background: #4a90e2;
+    color: white;
+}
+
+.btn-delete {
+    color: var(--main-color);
+}
+
+.btn-delete:hover {
+    background: var(--main-color);
+    color: white;
+}
+
+/* Modale customizations for Admin */
+#modalCar {
+    width: 500px;
+}
+
+#carType {
+    width: 100%;
+    padding: 0.85rem 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1rem;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.admin-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--main-color);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--bordure-color);
+    transition: 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.stat-info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 2px;
+    color: var(--text-color);
+}
+
+.stat-info p {
+    font-size: 0.85rem;
+    color: var(--container-color);
+    margin: 0;
+}
+
+/* Car Status */
+.car-in-service img {
+    opacity: 0.5;
+    filter: grayscale(80%);
+}
+
+.car-in-service {
+    background-color: #f9f9f9;
+}
+
+.status-badge.disponible {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-badge.en.service {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.btn-status-toggle {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid var(--bordure-color);
+    background: #f5f5f5;
+    transition: 0.2s;
+}
+
+.btn-status-toggle:hover {
+    background: var(--main-color);
+    color: white;
+    border-color: var(--main-color);
+}
+
+
+/* ===== RESPONSIVE ADMIN ===== */
+@media (max-width: 991px) {
+    .admin-main {
+        margin-top: 100px;
+    }
+
+    .cars-table-container {
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .admin-tabs {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+
+    #modalCar {
+        width: 95% !important;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .btn-ajouter span {
+        display: none;
+    }
+
+    .btn-ajouter {
+        padding: 10px;
+    }
+}

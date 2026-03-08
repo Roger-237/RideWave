@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Dashboard - RideWave</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/dashboard.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <header class="header">
+        <div class="nav container">
+            <a href="index.html" class="logo">Ride <span>Wave</span></a>
+            <div class="nav-droit">
+                <span id="userName" style="color: var(--text-color); font-weight: 500;"></span>
+                <a href="index.html" class="btn-retour">Accueil</a>
+                <div class="logout-btn" onclick="logout()"><i class="bx bx-log-out"></i></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container container">
+        <div class="dashboard-header">
+            <h1>Mes Réservations</h1>
+            <p>Gérez vos demandes de location et suivez leur état en temps réel.</p>
+        </div>
+
+        <div class="bookings-grid" id="bookingsGrid">
+            <!-- Les réservations seront injectées ici -->
+            <div class="loading-state">Chargement de vos réservations...</div>
+        </div>
+    </main>
+
+    <div id="conteneurNotifications"
+        style="position: fixed; top: 20px; right: 20px; z-index: 10000; pointer-events: none;"></div>
+
+    <script src="./js/dashboard.js"></script>
+</body>
+
+</html>
