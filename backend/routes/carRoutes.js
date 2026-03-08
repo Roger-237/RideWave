@@ -5,10 +5,19 @@ const { verifyToken } = require('../middleware/verifyToken');
 const multer = require('multer');
 const path = require('path');
 
+const fs = require('fs');
+
+const isProd = process.env.NODE_ENV === 'production';
+const uploadDir = isProd ? '/tmp/uploads/' : 'uploads/';
+
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
 // Multer Config
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, uploadDir);
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
