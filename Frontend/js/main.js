@@ -302,7 +302,7 @@ async function loadCarsHome() {
     if (!louerContainer) return;
 
     try {
-        const res = await fetch('https://ride-wave-vbtv.vercel.app/api/cars');
+        const res = await fetch('https://ride-wave-vbtv.vercel.app/api/cars', { credentials: 'include' });
         const data = await res.json();
         if (data.SUCCESS) {
             renderCars(data.data);

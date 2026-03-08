@@ -151,7 +151,7 @@ async function checkAdminAuth() {
 
 async function loadCars() {
     try {
-        const res = await fetch(CARS_API);
+        const res = await fetch(CARS_API, { credentials: 'include' });
         const data = await res.json();
         if (data.SUCCESS) {
             renderTable(data.data);
