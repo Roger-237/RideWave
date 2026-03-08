@@ -165,55 +165,117 @@ async function checkAuth() {
 
 function mettreAJourUI(user) {
     const navDroit = document.querySelector('.nav-droit');
+    const navLiens = document.querySelector('.nav-liens');
     const loginBtn = document.querySelector('.login-btn');
     const signUpBtn = document.querySelector('.sign-up-btn');
+
+    // Nettoyer les anciens éléments de menu mobile s'ils existent
+    const existingMobileMenu = document.querySelector('.mobile-user-menu');
+    if (existingMobileMenu) existingMobileMenu.remove();
+
+    const mobileMenu = document.createElement('div');
+    mobileMenu.className = 'mobile-user-menu';
 
     if (user) {
         if (loginBtn) loginBtn.style.display = 'none';
         if (signUpBtn) signUpBtn.style.display = 'none';
 
-        // Check if user info already exists to avoid duplicates
+        // Version Desktop
         let userInfo = document.querySelector('.user-info-nav');
         if (!userInfo) {
             userInfo = document.createElement('div');
             userInfo.className = 'user-info-nav';
-            userInfo.style.display = 'flex';
-            userInfo.style.alignItems = 'center';
-            userInfo.style.gap = '15px';
 
             const userText = document.createElement('span');
-            userText.style.color = 'var(--text-color)';
-            userText.style.fontWeight = '500';
             userText.innerText = `Salut, ${user.name.split(' ')[0]}!`;
 
             const btnReservations = document.createElement('a');
             btnReservations.href = 'dashboard.html';
             btnReservations.innerHTML = '<i class="bx bx-list-ul"></i> <span>Mes Réservations</span>';
+            btnReservations.className = 'nav-lien-desk';
             btnReservations.style.cssText = 'cursor: pointer; color: var(--main-color); text-decoration: none; display: flex; align-items: center; gap: 5px; font-size: 0.9rem;';
 
-            const logoutBtn = document.createElement('div');
-            logoutBtn.innerHTML = '<i class="bx bx-log-out"></i>';
-            logoutBtn.style.cssText = 'cursor: pointer; font-size: 20px; color: var(--main-color);';
-            logoutBtn.onclick = logout;
+            const logoutBtnDesk = document.createElement('div');
+            logoutBtnDesk.innerHTML = '<i class="bx bx-log-out"></i>';
+            logoutBtnDesk.style.cssText = 'cursor: pointer; font-size: 20px; color: var(--main-color);';
+            logoutBtnDesk.onclick = logout;
 
             if (user.role === 'admin') {
-                const adminLink = document.createElement('a');
-                adminLink.href = 'admin.html';
-                adminLink.innerHTML = '<i class="bx bx-shield-quarter"></i> Admin';
-                adminLink.style.cssText = 'color: #f44336; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px; margin-right: 10px;';
-                userInfo.appendChild(adminLink);
+                const adminLinkDesk = document.createElement('a');
+                adminLinkDesk.href = 'admin.html';
+                adminLinkDesk.className = 'nav-lien-desk';
+                adminLinkDesk.innerHTML = '<i class="bx bx-shield-quarter"></i> Admin';
+                adminLinkDesk.style.cssText = 'color: #f44336; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px; margin-right: 10px;';
+                userInfo.appendChild(adminLinkDesk);
             }
 
             userInfo.appendChild(userText);
             userInfo.appendChild(btnReservations);
-            userInfo.appendChild(logoutBtn);
+            userInfo.appendChild(logoutBtnDesk);
             navDroit.appendChild(userInfo);
         }
+
+        // Version Mobile (dans le menu burger)
+        const userGreet = document.createElement('p');
+        userGreet.style.fontWeight = '600';
+        userGreet.style.marginBottom = '10px';
+        userGreet.innerText = `Salut, ${user.name}!`;
+        mobileMenu.appendChild(userGreet);
+
+        if (user.role === 'admin') {
+            const adminLinkMob = document.createElement('a');
+            adminLinkMob.href = 'admin.html';
+            adminLinkMob.className = 'nav-lien';
+            adminLinkMob.innerHTML = '<i class="bx bx-shield-quarter"></i> Admin Panel';
+            mobileMenu.appendChild(adminLinkMob);
+        }
+
+        const resLinkMob = document.createElement('a');
+        resLinkMob.href = 'dashboard.html';
+        resLinkMob.className = 'nav-lien';
+        resLinkMob.innerHTML = '<i class="bx bx-list-ul"></i> Mes Réservations';
+        mobileMenu.appendChild(resLinkMob);
+
+        const logoutLinkMob = document.createElement('a');
+        logoutLinkMob.href = '#';
+        logoutLinkMob.className = 'nav-lien';
+        logoutLinkMob.style.color = 'var(--main-color)';
+        logoutLinkMob.innerHTML = '<i class="bx bx-log-out"></i> Déconnexion';
+        logoutLinkMob.onclick = (e) => { e.preventDefault(); logout(); };
+        mobileMenu.appendChild(logoutLinkMob);
+
     } else {
         const userInfo = document.querySelector('.user-info-nav');
         if (userInfo) userInfo.remove();
         if (loginBtn) loginBtn.style.display = 'block';
         if (signUpBtn) signUpBtn.style.display = 'block';
+
+        // Version Mobile - Login/Register
+        const loginLinkMob = document.createElement('a');
+        loginLinkMob.href = '#';
+        loginLinkMob.className = 'nav-lien';
+        loginLinkMob.innerHTML = '<i class="bx bx-log-in"></i> Connexion';
+        loginLinkMob.onclick = (e) => { e.preventDefault(); fermerMenuMobile(); ouvrirConnexion(); };
+
+        const subscribeLinkMob = document.createElement('a');
+        subscribeLinkMob.href = '#';
+        subscribeLinkMob.className = 'nav-lien';
+        subscribeLinkMob.innerHTML = '<i class="bx bx-user-plus"></i> Inscription';
+        subscribeLinkMob.onclick = (e) => { e.preventDefault(); fermerMenuMobile(); ouvrirInscription(); };
+
+        mobileMenu.appendChild(loginLinkMob);
+        mobileMenu.appendChild(subscribeLinkMob);
+    }
+
+    navLiens.appendChild(mobileMenu);
+}
+
+function fermerMenuMobile() {
+    const menu = document.querySelector(".menu-icon");
+    const navLinks = document.querySelector(".nav-liens");
+    if (menu.classList.contains("move")) {
+        menu.classList.remove("move");
+        navLinks.classList.remove("active");
     }
 }
 

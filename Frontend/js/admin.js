@@ -2,6 +2,10 @@ const BOOKINGS_API = 'https://ride-wave-vbtv.vercel.app/api/bookings';
 const CARS_API = 'https://ride-wave-vbtv.vercel.app/api/cars';
 const API_URL = 'https://ride-wave-vbtv.vercel.app/api/auth';
 
+function toggleAdminSidebar() {
+    document.querySelector('.sidebar').classList.toggle('active');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     checkAdminAuth();
     loadCars();

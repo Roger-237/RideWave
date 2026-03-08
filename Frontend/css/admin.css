@@ -10,7 +10,8 @@
     /* Deep Blue */
     height: 100vh;
     position: fixed;
-    left: 0;
+    left: -260px;
+    /* Hidden by default on mobile */
     top: 0;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
@@ -121,9 +122,47 @@
 .admin-main {
 
     flex: 1;
-    margin-left: 260px;
-    padding: 40px;
-    width: calc(100% - 260px);
+    margin-left: 0;
+    /* No margin on mobile */
+    padding: 20px;
+    width: 100%;
+    margin-top: 60px;
+}
+
+/* Desktop Sidebar Visible */
+@media (min-width: 992px) {
+    .sidebar {
+        left: 0;
+    }
+
+    .admin-main {
+        margin-left: 260px;
+        width: calc(100% - 260px);
+        margin-top: 0;
+    }
+
+    .mobile-admin-header {
+        display: none;
+    }
+}
+
+.mobile-admin-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #1a237e;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    justify-content: space-between;
+    z-index: 900;
+    color: white;
+}
+
+.sidebar.active {
+    left: 0;
 }
 
 .admin-header {

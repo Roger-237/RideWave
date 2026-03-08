@@ -95,6 +95,28 @@ img {
     column-gap: 1.5rem;
 }
 
+/* User Info Styling */
+.user-info-nav {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info-nav span {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.mobile-user-menu {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--bordure-color);
+    margin-top: 1.5rem;
+}
+
 .nav-lien {
     color: var(--text-color);
     font-size: 1rem;
@@ -1081,7 +1103,19 @@ body.modale-ouverte {
     }
 
     .nav-droit {
-        display: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-droit .login-btn,
+    .nav-droit .sign-up-btn {
+        display: none !important;
+        /* Hide original buttons in header on mobile */
+    }
+
+    .nav-droit .user-info-nav {
+        display: none !important;
+        /* Hide original user info in header on mobile */
     }
 
     .acceuil {
@@ -1158,6 +1192,18 @@ body.modale-ouverte {
     .nav-liens {
         width: 250px;
         padding: 70px 15px 15px;
+        overflow-y: auto;
+    }
+
+    .mobile-user-menu {
+        display: flex;
+    }
+
+    .nav-liens .nav-lien {
+        font-size: 1.1rem;
+        padding: 10px 0;
+        width: 100%;
+        border-bottom: 1px solid var(--bordure-color);
     }
 
     .acceuil {
