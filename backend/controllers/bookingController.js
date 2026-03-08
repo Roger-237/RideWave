@@ -26,7 +26,7 @@ exports.createBooking = async (req, res) => {
         res.status(201).json({ SUCCESS: true, message: 'Réservation effectuée avec succès' });
     } catch (err) {
         console.error('Erreur réservation:', err);
-        res.status(500).json({ SUCCESS: false, message: 'Erreur serveur lors de la réservation', error: err.message, stack: err.stack });
+        res.status(500).json({ SUCCESS: false, message: 'Erreur serveur lors de la réservation' });
     }
 };
 
@@ -37,7 +37,7 @@ exports.getUserBookings = async (req, res) => {
             .sort({ createdAt: -1 });
         res.status(200).json({ SUCCESS: true, data: bookings });
     } catch (err) {
-        res.status(500).json({ SUCCESS: false, message: 'Erreur serveur', error: err.message, stack: err.stack });
+        res.status(500).json({ SUCCESS: false, message: 'Erreur serveur' });
     }
 };
 
@@ -49,7 +49,7 @@ exports.getAllBookings = async (req, res) => {
             .sort({ createdAt: -1 });
         res.status(200).json({ SUCCESS: true, data: bookings });
     } catch (err) {
-        res.status(500).json({ SUCCESS: false, message: 'Erreur serveur', error: err.message, stack: err.stack });
+        res.status(500).json({ SUCCESS: false, message: 'Erreur serveur' });
     }
 };
 
@@ -74,7 +74,7 @@ exports.updateBookingStatus = async (req, res) => {
 
 
     } catch (err) {
-        res.status(500).json({ SUCCESS: false, message: 'Erreur serveur', error: err.message, stack: err.stack });
+        res.status(500).json({ SUCCESS: false, message: 'Erreur serveur' });
     }
 };
 
@@ -105,7 +105,7 @@ exports.getAdminStats = async (req, res) => {
 
     } catch (err) {
         console.error('Erreur stats:', err);
-        res.status(500).json({ SUCCESS: false, message: 'Erreur serveur lors de la récupération des stats', error: err.message });
+        res.status(500).json({ SUCCESS: false, message: 'Erreur serveur lors de la récupération des stats' });
     }
 };
 
@@ -133,6 +133,6 @@ exports.deleteBooking = async (req, res) => {
         res.status(200).json({ SUCCESS: true, message: 'Réservation supprimée' });
 
     } catch (err) {
-        res.status(500).json({ SUCCESS: false, message: 'Erreur serveur', error: err.message, stack: err.stack });
+        res.status(500).json({ SUCCESS: false, message: 'Erreur serveur' });
     }
 };

@@ -16,22 +16,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
-
-        // Accept localhost, vercel domains, and the explicit CLIENT_URL
-        if (origin.startsWith('http://localhost:') || origin.endsWith('.vercel.app')) {
-            return callback(null, true);
-        }
-
-        if (process.env.CLIENT_URL && origin === process.env.CLIENT_URL) {
-            return callback(null, true);
-        }
-
-        // If we reach here, log it but still allow it to prevent 500 crashes
-        console.warn(`CORS Warning: Unrecognized origin ${origin}`);
-        callback(null, true); // Permissive during debugging
-    },
+    origin: process.env.CLIENT_URL || 'http://localhost:5500',
     credentials: true
 }));
 

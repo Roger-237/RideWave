@@ -2,23 +2,13 @@ const express = require('express');
 const router = express.Router();
 const carController = require('../controllers/carController');
 const { verifyToken } = require('../middleware/verifyToken');
-const fs = require('fs');
+const multer = require('multer');
+const path = require('path');
 
 // Multer Config
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const isVercel = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
-        const uploadDir = isVercel ? '/tmp/uploads/cars/' : 'uploads/';
-
-        try {
-            if (!fs.existsSync(uploadDir)) {
-                fs.mkdirSync(uploadDir, { recursive: true });
-            }
-        } catch (error) {
-            console.error("Erreur création dossier car:", error);
-        }
-
-        cb(null, uploadDir);
+        cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
