@@ -2,23 +2,23 @@ const express = require('express');
 const router = express.Router();
 const bookingController = require('../controllers/bookingController');
 const { verifyToken } = require('../middleware/verifyToken');
-const multer = require('multer');
-const path = require('path');
-
 const fs = require('fs');
-
-// Determine upload directory
-const isProd = process.env.NODE_ENV === 'production';
-const uploadDir = isProd ? '/tmp/uploads/documents/' : 'uploads/documents/';
-
-// Ensure directory exists
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
 
 // Multer Config for multiple files
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
+        // Detect Vercel environment explicitly
+        const isVercel = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
+        const uploadDir = isVercel ? '/tmp/uploads/documents/' : 'uploads/documents/';
+
+        try {
+            if (!fs.existsSync(uploadDir)) {
+                fs.mkdirSync(uploadDir, { recursive: true });
+            }
+        } catch (error) {
+            console.error("Erreur création dossier:", error);
+        }
+
         cb(null, uploadDir);
     },
     filename: (req, file, cb) => {
