@@ -245,32 +245,23 @@ function mettreAJourUI(user) {
         mobileMenu.appendChild(logoutLinkMob);
 
     } else {
-        // User NOT logged in
         const userInfo = document.querySelector('.user-info-nav');
         if (userInfo) userInfo.remove();
         if (loginBtn) loginBtn.style.display = 'block';
         if (signUpBtn) signUpBtn.style.display = 'block';
 
-        // Version Mobile - Login/Register Links
+        // Version Mobile - Login/Register
         const loginLinkMob = document.createElement('a');
         loginLinkMob.href = '#';
-        loginLinkMob.className = 'nav-lien mobile-login-link';
+        loginLinkMob.className = 'nav-lien';
         loginLinkMob.innerHTML = '<i class="bx bx-log-in"></i> Connexion';
-        loginLinkMob.onclick = (e) => {
-            e.preventDefault();
-            fermerMenuMobile();
-            ouvrirConnexion();
-        };
+        loginLinkMob.onclick = (e) => { e.preventDefault(); fermerMenuMobile(); ouvrirConnexion(); };
 
         const subscribeLinkMob = document.createElement('a');
         subscribeLinkMob.href = '#';
-        subscribeLinkMob.className = 'nav-lien mobile-signup-link';
+        subscribeLinkMob.className = 'nav-lien';
         subscribeLinkMob.innerHTML = '<i class="bx bx-user-plus"></i> Inscription';
-        subscribeLinkMob.onclick = (e) => {
-            e.preventDefault();
-            fermerMenuMobile();
-            ouvrirInscription();
-        };
+        subscribeLinkMob.onclick = (e) => { e.preventDefault(); fermerMenuMobile(); ouvrirInscription(); };
 
         mobileMenu.appendChild(loginLinkMob);
         mobileMenu.appendChild(subscribeLinkMob);

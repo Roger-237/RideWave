@@ -3,27 +3,14 @@ const CARS_API = 'https://ride-wave-vbtv.vercel.app/api/cars';
 const API_URL = 'https://ride-wave-vbtv.vercel.app/api/auth';
 
 function toggleAdminSidebar() {
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    sidebar.classList.toggle('active');
-    if (overlay) overlay.classList.toggle('active');
+    document.querySelector('.sidebar').classList.toggle('active');
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-    showLoading();
-    try {
-        await checkAdminAuth();
-        // Load everything in parallel
-        await Promise.all([
-            loadCars(),
-            loadBookings(),
-            loadStats()
-        ]);
-    } catch (err) {
-        console.error("Initial load error:", err);
-    } finally {
-        hideLoading();
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    checkAdminAuth();
+    loadCars();
+    loadBookings();
+    loadStats();
 
 
     // Tab switch logic (Sidebar)
@@ -46,14 +33,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             loadBookings();
             // Cacher le badge quand on consulte
             document.getElementById('bookingBadge').style.display = 'none';
-        }
-
-        // Close sidebar on mobile after selection
-        if (window.innerWidth <= 768) {
-            const sidebar = document.querySelector('.sidebar');
-            if (sidebar.classList.contains('active')) {
-                toggleAdminSidebar();
-            }
         }
     };
 
@@ -526,12 +505,3 @@ async function executerActionBooking(id, status, cancelReason = '') {
     }
 }
 
-function showLoading() {
-    const loader = document.getElementById('adminLoader');
-    if (loader) loader.style.display = 'flex';
-}
-
-function hideLoading() {
-    const loader = document.getElementById('adminLoader');
-    if (loader) loader.style.display = 'none';
-}
