@@ -20,6 +20,17 @@ app.use(cors({
     credentials: true
 }));
 
+// Ensure MongoDB is connected before every request (critical for Vercel serverless)
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        console.error('DB connection failed:', error);
+        res.status(500).json({ success: false, message: 'Database connection failed' });
+    }
+});
+
 // Serve static files from the Frontend folder
 app.use(express.static(path.join(__dirname, '..', 'Frontend')));
 // Serve uploaded images
@@ -34,25 +45,16 @@ app.use('/api/cars', carRoutes);
 // Booking Routes
 app.use('/api/bookings', bookingRoutes);
 
-// Basic health check or API identification for the root route
+// Basic health check
 app.get('/', (req, res) => {
     res.json({ message: "RideWave API is running", status: "online" });
 });
 
-// Database connection & Server start
-const startServer = async () => {
-    try {
-        await connectDB();
-        if (process.env.NODE_ENV !== 'production') {
-            app.listen(PORT, () => {
-                console.log(`RideWave server running at http://localhost:${PORT}`);
-            });
-        }
-    } catch (error) {
-        console.error('Sever startup error:', error);
-    }
-};
-
-startServer();
+// Local development only
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`RideWave server running at http://localhost:${PORT}`);
+    });
+}
 
 module.exports = app;
