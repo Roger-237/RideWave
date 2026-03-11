@@ -5,21 +5,10 @@ const { verifyToken } = require('../middleware/verifyToken');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { put } = require('@vercel/blob');
 
-// Multer Config
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const dir = 'uploads/';
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
-        }
-        cb(null, dir);
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-
+// Use memory storage for Vercel Blob
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Middleware to check if user is admin
@@ -40,11 +29,25 @@ router.delete('/:id', verifyToken, verifyAdmin, carController.deleteCar);
 
 
 // Upload endpoint
-router.post('/upload', verifyToken, verifyAdmin, upload.single('image'), (req, res) => {
+router.post('/upload', verifyToken, verifyAdmin, upload.single('image'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ SUCCESS: false, message: 'No file uploaded' });
     }
-    res.status(200).json({ SUCCESS: true, imageUrl: `uploads/${req.file.filename}` });
+
+    try {
+        const filename = `${Date.now()}${path.extname(req.file.originalname)}`;
+        
+        // Upload to Vercel Blob
+        const blob = await put(`cars/${filename}`, req.file.buffer, {
+            access: 'public',
+            contentType: req.file.mimetype,
+        });
+
+        res.status(200).json({ SUCCESS: true, imageUrl: blob.url });
+    } catch (error) {
+        console.error('Error uploading to Vercel Blob:', error);
+        res.status(500).json({ SUCCESS: false, message: 'Failed to upload image' });
+    }
 });
 
 module.exports = router;

@@ -6,20 +6,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Multer Config for multiple files
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const dir = 'uploads/documents/';
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
-        }
-        cb(null, dir);
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${req.user._id}-${Date.now()}${path.extname(file.originalname)}`);
-    }
-});
-
+// Use memory storage for Vercel Blob
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Role check helper

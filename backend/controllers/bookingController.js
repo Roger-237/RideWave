@@ -1,5 +1,7 @@
 const Booking = require('../models/Booking');
 const Car = require('../models/Car');
+const { put } = require('@vercel/blob');
+const path = require('path');
 
 
 exports.createBooking = async (req, res) => {
@@ -9,6 +11,22 @@ exports.createBooking = async (req, res) => {
         if (!req.files || !req.files['driverLicense'] || !req.files['idCard']) {
             return res.status(400).json({ SUCCESS: false, message: 'Veuillez télécharger tous les documents requis' });
         }
+        
+        // Upload Driver License to Blob
+        const licenseFile = req.files['driverLicense'][0];
+        const licenseExt = path.extname(licenseFile.originalname);
+        const licenseBlob = await put(`documents/${req.user._id}-license-${Date.now()}${licenseExt}`, licenseFile.buffer, {
+            access: 'public',
+            contentType: licenseFile.mimetype,
+        });
+
+        // Upload ID Card to Blob
+        const idCardFile = req.files['idCard'][0];
+        const idCardExt = path.extname(idCardFile.originalname);
+        const idCardBlob = await put(`documents/${req.user._id}-id-${Date.now()}${idCardExt}`, idCardFile.buffer, {
+            access: 'public',
+            contentType: idCardFile.mimetype,
+        });
 
         const booking = new Booking({
             user: req.user._id,
@@ -18,8 +36,8 @@ exports.createBooking = async (req, res) => {
             startDate,
             endDate,
             totalPrice,
-            driverLicense: req.files['driverLicense'][0].path,
-            idCard: req.files['idCard'][0].path
+            driverLicense: licenseBlob.url,
+            idCard: idCardBlob.url
         });
 
         await booking.save();

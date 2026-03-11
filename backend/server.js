@@ -33,8 +33,9 @@ app.use(async (req, res, next) => {
 
 // Serve static files from the Frontend folder
 app.use(express.static(path.join(__dirname, '..', 'Frontend')));
-// Serve uploaded images
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+// Serve uploaded images (route from /tmp if on Vercel)
+const uploadDir = process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, '..', 'uploads');
+app.use('/uploads', express.static(uploadDir));
 
 // Auth Routes
 app.use('/api/auth', authRoutes);
