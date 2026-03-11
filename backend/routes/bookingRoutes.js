@@ -4,11 +4,16 @@ const bookingController = require('../controllers/bookingController');
 const { verifyToken } = require('../middleware/verifyToken');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 // Multer Config for multiple files
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/documents/');
+        const dir = 'uploads/documents/';
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        cb(null, dir);
     },
     filename: (req, file, cb) => {
         cb(null, `${req.user._id}-${Date.now()}${path.extname(file.originalname)}`);

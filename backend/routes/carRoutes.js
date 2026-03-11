@@ -4,11 +4,16 @@ const carController = require('../controllers/carController');
 const { verifyToken } = require('../middleware/verifyToken');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 // Multer Config
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        const dir = 'uploads/';
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        cb(null, dir);
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
